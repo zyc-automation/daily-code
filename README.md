@@ -12,6 +12,10 @@
 daily-code/
 ├── python/          # Python 学习日志（按月归档）
 ├── c/               # C 语言 / 嵌入式学习日志
+├── matlab/          # MATLAB 学习日志 + 仿真代码
+│   ├── 2026-08/     # 每日笔记（.md）
+│   └── control-sim/ # 控制仿真代码（.m 文件）
+├── ros2/            # ROS2 学习日志
 ├── projects/        # 项目笔记（倒立摆、小车等）
 ├── push.bat         # 双击自动提交+推送
 └── README.md

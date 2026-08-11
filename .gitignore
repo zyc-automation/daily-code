@@ -21,4 +21,12 @@ venv/
 *.temp
 ~$*
 
-# 但保留所有 .md / .c / .py 等源码
+# MATLAB
+*.asv
+*.mat
+*.mex*
+*.slxc
+slprj/
+codegen/
+
+# 但保留所有 .md / .c / .py / .m 等源码
