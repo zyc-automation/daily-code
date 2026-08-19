@@ -56,18 +56,18 @@ den = (M + m) * I + M * m * l**2
 
 # 【TODO 1】构造 A 矩阵(4×4)，按上面的公式填
 A = np.array([
-    [____, ____, ____, ____],
-    [____, ____, ____, ____],
-    [____, ____, ____, ____],
-    [____, ____, ____, ____]
+    [0, 1, 0, 0],
+    [0, 0, -(m**2*g*l**2)/den, 0],
+    [0, 0, 0, 1],
+    [0, 0, (M+m)*m*g*l/den, 0]
 ])
 
 # 【TODO 2】构造 B 矩阵(4×1)
 B = np.array([
-    [____],
-    [____],
-    [____],
-    [____]
+    [0],
+    [(I+m*l**2)/den],
+    [0],
+    [-m*l/den]
 ])
 
 # ---------- 3. LQR 权重 ----------
@@ -79,11 +79,11 @@ R = np.array([[1.0]])   # 惩罚控制力：越大越"省力"
 # ---------- 4. 解 Riccati 方程 + 计算增益 K ----------
 # 【TODO 3】解连续时间代数 Riccati 方程，得到 P
 # 提示：用 solve_continuous_are(A, B, Q, R)，它返回的就是 P
-P = ________________
+P = solve_continuous_are(A, B, Q, R)
 
 # 【TODO 4】计算最优反馈增益 K
 # 公式：K = R⁻¹ · Bᵀ · P
-K = ________________
+K = np.linalg.inv(R) @ B.T @ P
 
 print("最优反馈增益 K =", K.round(3))
 
@@ -103,7 +103,7 @@ while t < t_end:
     state = np.array([[x], [x_dot], [theta], [theta_dot]])
 
     # 【TODO 5】LQR 控制力：u = -K · x（全状态反馈）
-    u = ________________
+    u = -K @ state
 
     # ---- 非线性动力学（和台阶 4 一样，用真实非线性方程更新）----
     s, c = np.sin(theta), np.cos(theta)
@@ -114,10 +114,10 @@ while t < t_end:
     x_ddot, theta_ddot = np.linalg.solve(A_mat, b_vec)
 
     # 【TODO 6~9】欧拉积分更新 4 个状态
-    x_dot = ________________
-    x = ________________
-    theta_dot = ________________
-    theta = ________________
+    x_dot = x_dot + x_ddot * dt
+    x = x + x_dot * dt
+    theta_dot = theta_dot + theta_ddot * dt
+    theta = theta + theta_dot * dt
 
     time_list.append(t)
     x_list.append(x)
