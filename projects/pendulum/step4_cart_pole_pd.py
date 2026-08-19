@@ -86,34 +86,33 @@ while t < t_end:
     # 力作用在"小车"上！摆杆右偏(θ>0)→小车往右开→摆杆往回倒
     # 所以 F 和 θ 同号（符号和台阶 3 的力矩相反）
     # 公式：F = Kp * theta + Kd * theta_dot
-    F = ________________
-
+    F = Kp * theta + Kd * theta_dot
     # 【TODO 2】构造 A 矩阵
     # 方程①：(M+m)·x_ddot + m·l·cosθ·θ_ddot = F + m·l·sinθ·θ_dot²
     # 方程②：m·l·cosθ·x_ddot + (I+m·l²)·θ_ddot = m·g·l·sinθ
     # A = [[第一行 x_ddot 系数, 第一行 θ_ddot 系数],
     #      [第二行 x_ddot 系数, 第二行 θ_ddot 系数]]
     A = np.array([
-        [________________, ________________],
-        [________________, ________________]
+        [(M+m), m*l*cos_theta],
+        [m*l*cos_theta, (I+m*l**2)]
     ])
 
     # 【TODO 3】构造 b_vec（两个方程的右边）
     # 方程①右边 = F + m·l·sinθ·θ_dot²
     # 方程②右边 = m·g·l·sinθ
     b_vec = np.array([
-        ________________,
-        ________________
+        F + m*l*sin_theta*theta_dot**2,
+        m*g*l*sin_theta
     ])
 
     # 【TODO 4】联立求解两个加速度
     x_ddot, theta_ddot = np.linalg.solve(A, b_vec)
 
     # 【TODO 5~8】欧拉积分更新 4 个状态（新值 = 旧值 + 变化率 × dt）
-    x_dot = ________________
-    x = ________________
-    theta_dot = ________________
-    theta = ________________
+    x_dot = x_dot + x_ddot * dt
+    x = x + x_dot * dt
+    theta_dot =  theta_dot + theta_ddot * dt
+    theta =  theta + theta_dot * dt
 
     # 记录数据（不用改）
     time_list.append(t)
