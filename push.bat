@@ -1,35 +1,32 @@
 @echo off
+chcp 65001 >nul
 cd /d "%~dp0"
 
 echo.
 echo ============================================
-echo   daily-code - Push to GitHub
+echo    daily-code 打卡推送
 echo ============================================
 echo.
 
-for /f "tokens=2 delims==" %%I in ('wmic os get localdatetime /value') do set datetime=%%I
-set today=%datetime:~0,4%-%datetime:~4,2%-%datetime:~6,2%
+for /f "usebackq delims=" %%i in (`powershell -NoProfile -Command "Get-Date -Format yyyy-MM-dd"`) do set today=%%i
 
-echo   Date: %today%
-echo   Step 1/2: Committing changes...
+echo    日期: %today%
 echo.
 
 git add -A
-
-git commit -m "%today% daily check-in" 2>nul
-if %errorlevel% neq 0 (
-    echo   [WARN] Nothing to commit. Did you save your changes?
+git commit -m "%today% daily check-in" >nul 2>&1
+if errorlevel 1 (
+    echo    [提示] 没有改动可提交，请先保存你的代码/笔记
     echo.
     pause
     exit /b 0
 )
 
-echo   Step 2/2: Pushing to GitHub...
+echo    正在推送到 GitHub ...
 git push
-
-if %errorlevel% neq 0 (
+if errorlevel 1 (
     echo.
-    echo   [ERROR] Push failed. Check your network.
+    echo    [失败] 推送失败，多半是网络问题，稍后重试即可
     echo.
     pause
     exit /b 1
@@ -37,8 +34,8 @@ if %errorlevel% neq 0 (
 
 echo.
 echo ============================================
-echo   DONE! Go check your green dot:
-echo   github.com/zyc-automation
+echo    完成！绿点已更新
+echo    github.com/zyc-automation
 echo ============================================
 echo.
 pause
